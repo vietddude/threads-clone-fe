@@ -14,6 +14,7 @@ apiClient.interceptors.request.use(
 	(config) => {
 		// Lấy token từ cookie
 		const accessToken = useToken.getState().accessToken
+		console.log('accessToken', accessToken)
 		if (accessToken) {
 			// Nếu token tồn tại thì thêm vào header Authorization
 			config.headers.Authorization = `Bearer ${accessToken}`

@@ -4,10 +4,10 @@ import Navigation from '@/components/navigations'
 import useWindow from '@/hooks/use-window'
 import { cn } from '@/lib/utils'
 import { Link } from '@tanstack/react-router'
-// import NavigationMenu from '@/components/menus/navigation-menu'
+import NavigationMenu from '@/components/menus/navigation-menu'
 
 export default function SiteHeader() {
-	// const { isMobile } = useWindow()
+	const { isMobile } = useWindow()
 	const [isScrolled, setIsScrolled] = React.useState(false)
 
 	React.useEffect(() => {
@@ -37,13 +37,13 @@ export default function SiteHeader() {
 					<div className='hidden sm:flex justify-between items-center max-w-[480px] w-full '>
 						<Navigation />
 					</div>
-					{/* {isMobile ? (
+					{isMobile ? (
 						<div className='absolute right-0 -translate-y-2/4 top-2/4 z-[999]'>
 							<NavigationMenu />
 						</div>
 					) : (
 						<NavigationMenu />
-					)} */}
+					)}
 				</div>
 			</nav>
 		</header>

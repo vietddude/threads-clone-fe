@@ -6,9 +6,7 @@ import useUser from '@/store/user'
 
 export default function Navigation() {
 	const { user } = useUser()
-	const path = useLocation({
-		select: (location) => location.pathname
-	})
+	const path = useLocation().pathname
 
 	return (
 		<>

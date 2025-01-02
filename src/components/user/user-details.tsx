@@ -1,6 +1,5 @@
 import React from 'react'
-import { Instagram } from 'lucide-react'
-import { Link, useLocation, useParams } from '@tanstack/react-router'
+import { Link, useLocation } from '@tanstack/react-router'
 import { cn, formatURL } from '@/lib/utils'
 import { Icons } from '@/components/icons'
 import type { UserProfileInfoProps } from '@/types'
@@ -10,18 +9,11 @@ import UserFollowers from '@/components/user/user-followers'
 import FollowButton from '@/components/buttons/follow-button'
 import useUser from '@/store/user'
 const UserProfile: React.FC<UserProfileInfoProps> = (props) => {
-	const { id, bio, fullname, image, link, username, followers, isAdmin } = props
-	const path = useLocation({
-		select: (location) => location.pathname
-	})
+	const { id, bio, fullname, image, link, followers, isAdmin, username } = props
+	const path = useLocation().pathname
 	const { user } = useUser()
 
-	const params = useParams({
-		select: (params) => params.profile
-	})
-	const profile = params.profile as string
-	const usernamePath = decodeURIComponent(profile).substring(1)
-	const basePath = `@${usernamePath}`
+	const basePath = `@${username}`
 
 	const segments = path.split('/')
 	const lastSegment = segments[segments.length - 1]
@@ -80,13 +72,18 @@ const UserProfile: React.FC<UserProfileInfoProps> = (props) => {
 					</div>
 				</div>
 				<div className='flex gap-4'>
-					<Instagram className='h-6 w-6' />
+					<Icons.instagram className='h-6 w-6' />
 					{user?.id != id && <Icons.circleMenu className='h-6 w-6' />}
 				</div>
 			</div>
 			{user?.id != id && (
 				<div className='grid gap-2 sm:grid-cols-2 pt-2'>
-					<FollowButton className='text-[14px] px-6' variant='default' author={props} />
+					<FollowButton
+						className='text-[14px] px-6'
+						variant='default'
+						author={props}
+						isFollowedByMe={props.isFollowing}
+					/>
 					<Button
 						size={'sm'}
 						variant='outline'

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from '@tanstack/react-router'
-import type { NotificationType } from '@/types'
+import type { NotificationType } from '@/types/enums'
 import { Icons } from '@/components/icons'
 import { cn } from '@/lib/utils'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'

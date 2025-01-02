@@ -1,4 +1,5 @@
-import { Privacy } from './enums'
+import { InfinitePostResponse } from './api/post'
+import { NotificationType, Privacy } from './enums'
 
 export type User = {
 	link: string | null
@@ -15,10 +16,58 @@ export type User = {
 	isAdmin: boolean | null
 }
 
+export type Profile = User & {
+	isFollowing: boolean
+	followers: {
+		id: string
+		image: string
+	}[]
+	followerCount: number
+}
+
+export type Notification = {
+	id: string
+	createdAt: Date
+	type: NotificationType
+	message: string
+	read: boolean
+	notificationType: string
+	post: string
+	senderUser: User
+}
+
+export type Post = {
+	id: string
+	createdAt: Date
+	text: string
+	parentPostId: string | null
+	author: Profile
+	count: {
+		likeCount: number
+		replyCount: number
+	}
+	likes: {
+		userId: string
+	}[]
+	replies: {
+		author: {
+			id: string
+			image: string
+			username: string
+		}
+	}[]
+	quoteId: string | null
+	images: string[]
+	reposts: {
+		userId: string
+		postId: string
+	}[]
+}
+
 type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType[number]
 // type RouterOutput = inferRouterOutputs<AppRouter>;
 
-export type PostCardProps = ArrayElement<RouterOutput['post']['getInfinitePost']['posts']>
+export type PostCardProps = ArrayElement<InfinitePostResponse['data']>
 
 export type AuthorInfoProps = PostCardProps['author']
 
@@ -26,7 +75,7 @@ export type PostReplyCardProps = RouterOutput['post']['getNestedPosts']
 
 export type UserCardProps = ArrayElement<RouterOutput['user']['allUsers']['allUsers']>
 
-export type UserProfileInfoProps = RouterOutput['user']['Info']['userDetails']
+export type UserProfileInfoProps = Profile
 
 export type ParentPostInfo = Pick<PostCardProps, 'id' | 'text' | 'images' | 'author'>
 

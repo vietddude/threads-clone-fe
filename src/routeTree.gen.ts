@@ -8,29 +8,25 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as NotFoundImport } from './routes/not-found'
 import { Route as ErrorImport } from './routes/error'
-import { Route as pagesIndexImport } from './routes/(pages)/index'
-import { Route as authAuthImport } from './routes/(auth)/_auth'
-import { Route as authAuthSsoCallbackImport } from './routes/(auth)/_auth.sso-callback'
-import { Route as authAuthSetupImport } from './routes/(auth)/_auth.setup'
-import { Route as authAuthLoginImport } from './routes/(auth)/_auth.login'
-
-// Create Virtual Routes
-
-const authImport = createFileRoute('/(auth)')()
+import { Route as HomeImport } from './routes/_home'
+import { Route as AuthImport } from './routes/_auth'
+import { Route as HomeIndexImport } from './routes/_home/index'
+import { Route as HomeSearchImport } from './routes/_home/search'
+import { Route as HomeActivityImport } from './routes/_home/activity'
+import { Route as HomeUsernameImport } from './routes/_home/$username'
+import { Route as AuthSsoCallbackImport } from './routes/_auth/sso-callback'
+import { Route as AuthSetupImport } from './routes/_auth/setup'
+import { Route as AuthLoginImport } from './routes/_auth/login'
+import { Route as HomeUsernameIndexImport } from './routes/_home/$username/index'
+import { Route as HomeUsernameRepostsImport } from './routes/_home/$username/reposts'
+import { Route as HomeUsernameRepliesImport } from './routes/_home/$username/replies'
 
 // Create/Update Routes
-
-const authRoute = authImport.update({
-  id: '/(auth)',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const NotFoundRoute = NotFoundImport.update({
   id: '/not-found',
@@ -44,39 +40,94 @@ const ErrorRoute = ErrorImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const pagesIndexRoute = pagesIndexImport.update({
-  id: '/(pages)/',
-  path: '/',
+const HomeRoute = HomeImport.update({
+  id: '/_home',
   getParentRoute: () => rootRoute,
 } as any)
 
-const authAuthRoute = authAuthImport.update({
+const AuthRoute = AuthImport.update({
   id: '/_auth',
-  getParentRoute: () => authRoute,
+  getParentRoute: () => rootRoute,
 } as any)
 
-const authAuthSsoCallbackRoute = authAuthSsoCallbackImport.update({
+const HomeIndexRoute = HomeIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => HomeRoute,
+} as any)
+
+const HomeSearchRoute = HomeSearchImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => HomeRoute,
+} as any)
+
+const HomeActivityRoute = HomeActivityImport.update({
+  id: '/activity',
+  path: '/activity',
+  getParentRoute: () => HomeRoute,
+} as any)
+
+const HomeUsernameRoute = HomeUsernameImport.update({
+  id: '/$username',
+  path: '/$username',
+  getParentRoute: () => HomeRoute,
+} as any)
+
+const AuthSsoCallbackRoute = AuthSsoCallbackImport.update({
   id: '/sso-callback',
   path: '/sso-callback',
-  getParentRoute: () => authAuthRoute,
+  getParentRoute: () => AuthRoute,
 } as any)
 
-const authAuthSetupRoute = authAuthSetupImport.update({
+const AuthSetupRoute = AuthSetupImport.update({
   id: '/setup',
   path: '/setup',
-  getParentRoute: () => authAuthRoute,
+  getParentRoute: () => AuthRoute,
 } as any)
 
-const authAuthLoginRoute = authAuthLoginImport.update({
+const AuthLoginRoute = AuthLoginImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => authAuthRoute,
+  getParentRoute: () => AuthRoute,
+} as any)
+
+const HomeUsernameIndexRoute = HomeUsernameIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => HomeUsernameRoute,
+} as any)
+
+const HomeUsernameRepostsRoute = HomeUsernameRepostsImport.update({
+  id: '/reposts',
+  path: '/reposts',
+  getParentRoute: () => HomeUsernameRoute,
+} as any)
+
+const HomeUsernameRepliesRoute = HomeUsernameRepliesImport.update({
+  id: '/replies',
+  path: '/replies',
+  getParentRoute: () => HomeUsernameRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthImport
+      parentRoute: typeof rootRoute
+    }
+    '/_home': {
+      id: '/_home'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof HomeImport
+      parentRoute: typeof rootRoute
+    }
     '/error': {
       id: '/error'
       path: '/error'
@@ -91,145 +142,237 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NotFoundImport
       parentRoute: typeof rootRoute
     }
-    '/(auth)': {
-      id: '/(auth)'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof authImport
-      parentRoute: typeof rootRoute
-    }
-    '/(auth)/_auth': {
-      id: '/(auth)/_auth'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof authAuthImport
-      parentRoute: typeof authRoute
-    }
-    '/(pages)/': {
-      id: '/(pages)/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof pagesIndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/(auth)/_auth/login': {
-      id: '/(auth)/_auth/login'
+    '/_auth/login': {
+      id: '/_auth/login'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof authAuthLoginImport
-      parentRoute: typeof authAuthImport
+      preLoaderRoute: typeof AuthLoginImport
+      parentRoute: typeof AuthImport
     }
-    '/(auth)/_auth/setup': {
-      id: '/(auth)/_auth/setup'
+    '/_auth/setup': {
+      id: '/_auth/setup'
       path: '/setup'
       fullPath: '/setup'
-      preLoaderRoute: typeof authAuthSetupImport
-      parentRoute: typeof authAuthImport
+      preLoaderRoute: typeof AuthSetupImport
+      parentRoute: typeof AuthImport
     }
-    '/(auth)/_auth/sso-callback': {
-      id: '/(auth)/_auth/sso-callback'
+    '/_auth/sso-callback': {
+      id: '/_auth/sso-callback'
       path: '/sso-callback'
       fullPath: '/sso-callback'
-      preLoaderRoute: typeof authAuthSsoCallbackImport
-      parentRoute: typeof authAuthImport
+      preLoaderRoute: typeof AuthSsoCallbackImport
+      parentRoute: typeof AuthImport
+    }
+    '/_home/$username': {
+      id: '/_home/$username'
+      path: '/$username'
+      fullPath: '/$username'
+      preLoaderRoute: typeof HomeUsernameImport
+      parentRoute: typeof HomeImport
+    }
+    '/_home/activity': {
+      id: '/_home/activity'
+      path: '/activity'
+      fullPath: '/activity'
+      preLoaderRoute: typeof HomeActivityImport
+      parentRoute: typeof HomeImport
+    }
+    '/_home/search': {
+      id: '/_home/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof HomeSearchImport
+      parentRoute: typeof HomeImport
+    }
+    '/_home/': {
+      id: '/_home/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof HomeIndexImport
+      parentRoute: typeof HomeImport
+    }
+    '/_home/$username/replies': {
+      id: '/_home/$username/replies'
+      path: '/replies'
+      fullPath: '/$username/replies'
+      preLoaderRoute: typeof HomeUsernameRepliesImport
+      parentRoute: typeof HomeUsernameImport
+    }
+    '/_home/$username/reposts': {
+      id: '/_home/$username/reposts'
+      path: '/reposts'
+      fullPath: '/$username/reposts'
+      preLoaderRoute: typeof HomeUsernameRepostsImport
+      parentRoute: typeof HomeUsernameImport
+    }
+    '/_home/$username/': {
+      id: '/_home/$username/'
+      path: '/'
+      fullPath: '/$username/'
+      preLoaderRoute: typeof HomeUsernameIndexImport
+      parentRoute: typeof HomeUsernameImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface authAuthRouteChildren {
-  authAuthLoginRoute: typeof authAuthLoginRoute
-  authAuthSetupRoute: typeof authAuthSetupRoute
-  authAuthSsoCallbackRoute: typeof authAuthSsoCallbackRoute
+interface AuthRouteChildren {
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthSetupRoute: typeof AuthSetupRoute
+  AuthSsoCallbackRoute: typeof AuthSsoCallbackRoute
 }
 
-const authAuthRouteChildren: authAuthRouteChildren = {
-  authAuthLoginRoute: authAuthLoginRoute,
-  authAuthSetupRoute: authAuthSetupRoute,
-  authAuthSsoCallbackRoute: authAuthSsoCallbackRoute,
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthLoginRoute: AuthLoginRoute,
+  AuthSetupRoute: AuthSetupRoute,
+  AuthSsoCallbackRoute: AuthSsoCallbackRoute,
 }
 
-const authAuthRouteWithChildren = authAuthRoute._addFileChildren(
-  authAuthRouteChildren,
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
+interface HomeUsernameRouteChildren {
+  HomeUsernameRepliesRoute: typeof HomeUsernameRepliesRoute
+  HomeUsernameRepostsRoute: typeof HomeUsernameRepostsRoute
+  HomeUsernameIndexRoute: typeof HomeUsernameIndexRoute
+}
+
+const HomeUsernameRouteChildren: HomeUsernameRouteChildren = {
+  HomeUsernameRepliesRoute: HomeUsernameRepliesRoute,
+  HomeUsernameRepostsRoute: HomeUsernameRepostsRoute,
+  HomeUsernameIndexRoute: HomeUsernameIndexRoute,
+}
+
+const HomeUsernameRouteWithChildren = HomeUsernameRoute._addFileChildren(
+  HomeUsernameRouteChildren,
 )
 
-interface authRouteChildren {
-  authAuthRoute: typeof authAuthRouteWithChildren
+interface HomeRouteChildren {
+  HomeUsernameRoute: typeof HomeUsernameRouteWithChildren
+  HomeActivityRoute: typeof HomeActivityRoute
+  HomeSearchRoute: typeof HomeSearchRoute
+  HomeIndexRoute: typeof HomeIndexRoute
 }
 
-const authRouteChildren: authRouteChildren = {
-  authAuthRoute: authAuthRouteWithChildren,
+const HomeRouteChildren: HomeRouteChildren = {
+  HomeUsernameRoute: HomeUsernameRouteWithChildren,
+  HomeActivityRoute: HomeActivityRoute,
+  HomeSearchRoute: HomeSearchRoute,
+  HomeIndexRoute: HomeIndexRoute,
 }
 
-const authRouteWithChildren = authRoute._addFileChildren(authRouteChildren)
+const HomeRouteWithChildren = HomeRoute._addFileChildren(HomeRouteChildren)
 
 export interface FileRoutesByFullPath {
+  '': typeof HomeRouteWithChildren
   '/error': typeof ErrorRoute
   '/not-found': typeof NotFoundRoute
-  '/': typeof pagesIndexRoute
-  '/login': typeof authAuthLoginRoute
-  '/setup': typeof authAuthSetupRoute
-  '/sso-callback': typeof authAuthSsoCallbackRoute
+  '/login': typeof AuthLoginRoute
+  '/setup': typeof AuthSetupRoute
+  '/sso-callback': typeof AuthSsoCallbackRoute
+  '/$username': typeof HomeUsernameRouteWithChildren
+  '/activity': typeof HomeActivityRoute
+  '/search': typeof HomeSearchRoute
+  '/': typeof HomeIndexRoute
+  '/$username/replies': typeof HomeUsernameRepliesRoute
+  '/$username/reposts': typeof HomeUsernameRepostsRoute
+  '/$username/': typeof HomeUsernameIndexRoute
 }
 
 export interface FileRoutesByTo {
+  '': typeof AuthRouteWithChildren
   '/error': typeof ErrorRoute
   '/not-found': typeof NotFoundRoute
-  '/': typeof pagesIndexRoute
-  '/login': typeof authAuthLoginRoute
-  '/setup': typeof authAuthSetupRoute
-  '/sso-callback': typeof authAuthSsoCallbackRoute
+  '/login': typeof AuthLoginRoute
+  '/setup': typeof AuthSetupRoute
+  '/sso-callback': typeof AuthSsoCallbackRoute
+  '/activity': typeof HomeActivityRoute
+  '/search': typeof HomeSearchRoute
+  '/': typeof HomeIndexRoute
+  '/$username/replies': typeof HomeUsernameRepliesRoute
+  '/$username/reposts': typeof HomeUsernameRepostsRoute
+  '/$username': typeof HomeUsernameIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
+  '/_auth': typeof AuthRouteWithChildren
+  '/_home': typeof HomeRouteWithChildren
   '/error': typeof ErrorRoute
   '/not-found': typeof NotFoundRoute
-  '/(auth)': typeof authRouteWithChildren
-  '/(auth)/_auth': typeof authAuthRouteWithChildren
-  '/(pages)/': typeof pagesIndexRoute
-  '/(auth)/_auth/login': typeof authAuthLoginRoute
-  '/(auth)/_auth/setup': typeof authAuthSetupRoute
-  '/(auth)/_auth/sso-callback': typeof authAuthSsoCallbackRoute
+  '/_auth/login': typeof AuthLoginRoute
+  '/_auth/setup': typeof AuthSetupRoute
+  '/_auth/sso-callback': typeof AuthSsoCallbackRoute
+  '/_home/$username': typeof HomeUsernameRouteWithChildren
+  '/_home/activity': typeof HomeActivityRoute
+  '/_home/search': typeof HomeSearchRoute
+  '/_home/': typeof HomeIndexRoute
+  '/_home/$username/replies': typeof HomeUsernameRepliesRoute
+  '/_home/$username/reposts': typeof HomeUsernameRepostsRoute
+  '/_home/$username/': typeof HomeUsernameIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | ''
     | '/error'
     | '/not-found'
-    | '/'
     | '/login'
     | '/setup'
     | '/sso-callback'
+    | '/$username'
+    | '/activity'
+    | '/search'
+    | '/'
+    | '/$username/replies'
+    | '/$username/reposts'
+    | '/$username/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/error' | '/not-found' | '/' | '/login' | '/setup' | '/sso-callback'
-  id:
-    | '__root__'
+  to:
+    | ''
     | '/error'
     | '/not-found'
-    | '/(auth)'
-    | '/(auth)/_auth'
-    | '/(pages)/'
-    | '/(auth)/_auth/login'
-    | '/(auth)/_auth/setup'
-    | '/(auth)/_auth/sso-callback'
+    | '/login'
+    | '/setup'
+    | '/sso-callback'
+    | '/activity'
+    | '/search'
+    | '/'
+    | '/$username/replies'
+    | '/$username/reposts'
+    | '/$username'
+  id:
+    | '__root__'
+    | '/_auth'
+    | '/_home'
+    | '/error'
+    | '/not-found'
+    | '/_auth/login'
+    | '/_auth/setup'
+    | '/_auth/sso-callback'
+    | '/_home/$username'
+    | '/_home/activity'
+    | '/_home/search'
+    | '/_home/'
+    | '/_home/$username/replies'
+    | '/_home/$username/reposts'
+    | '/_home/$username/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
+  AuthRoute: typeof AuthRouteWithChildren
+  HomeRoute: typeof HomeRouteWithChildren
   ErrorRoute: typeof ErrorRoute
   NotFoundRoute: typeof NotFoundRoute
-  authRoute: typeof authRouteWithChildren
-  pagesIndexRoute: typeof pagesIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  AuthRoute: AuthRouteWithChildren,
+  HomeRoute: HomeRouteWithChildren,
   ErrorRoute: ErrorRoute,
   NotFoundRoute: NotFoundRoute,
-  authRoute: authRouteWithChildren,
-  pagesIndexRoute: pagesIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -242,10 +385,27 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
+        "/_auth",
+        "/_home",
         "/error",
-        "/not-found",
-        "/(auth)",
-        "/(pages)/"
+        "/not-found"
+      ]
+    },
+    "/_auth": {
+      "filePath": "_auth.tsx",
+      "children": [
+        "/_auth/login",
+        "/_auth/setup",
+        "/_auth/sso-callback"
+      ]
+    },
+    "/_home": {
+      "filePath": "_home.tsx",
+      "children": [
+        "/_home/$username",
+        "/_home/activity",
+        "/_home/search",
+        "/_home/"
       ]
     },
     "/error": {
@@ -254,35 +414,50 @@ export const routeTree = rootRoute
     "/not-found": {
       "filePath": "not-found.tsx"
     },
-    "/(auth)": {
-      "filePath": "(auth)",
+    "/_auth/login": {
+      "filePath": "_auth/login.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/setup": {
+      "filePath": "_auth/setup.tsx",
+      "parent": "/_auth"
+    },
+    "/_auth/sso-callback": {
+      "filePath": "_auth/sso-callback.tsx",
+      "parent": "/_auth"
+    },
+    "/_home/$username": {
+      "filePath": "_home/$username.tsx",
+      "parent": "/_home",
       "children": [
-        "/(auth)/_auth"
+        "/_home/$username/replies",
+        "/_home/$username/reposts",
+        "/_home/$username/"
       ]
     },
-    "/(auth)/_auth": {
-      "filePath": "(auth)/_auth.tsx",
-      "parent": "/(auth)",
-      "children": [
-        "/(auth)/_auth/login",
-        "/(auth)/_auth/setup",
-        "/(auth)/_auth/sso-callback"
-      ]
+    "/_home/activity": {
+      "filePath": "_home/activity.tsx",
+      "parent": "/_home"
     },
-    "/(pages)/": {
-      "filePath": "(pages)/index.tsx"
+    "/_home/search": {
+      "filePath": "_home/search.tsx",
+      "parent": "/_home"
     },
-    "/(auth)/_auth/login": {
-      "filePath": "(auth)/_auth.login.tsx",
-      "parent": "/(auth)/_auth"
+    "/_home/": {
+      "filePath": "_home/index.tsx",
+      "parent": "/_home"
     },
-    "/(auth)/_auth/setup": {
-      "filePath": "(auth)/_auth.setup.tsx",
-      "parent": "/(auth)/_auth"
+    "/_home/$username/replies": {
+      "filePath": "_home/$username/replies.tsx",
+      "parent": "/_home/$username"
     },
-    "/(auth)/_auth/sso-callback": {
-      "filePath": "(auth)/_auth.sso-callback.tsx",
-      "parent": "/(auth)/_auth"
+    "/_home/$username/reposts": {
+      "filePath": "_home/$username/reposts.tsx",
+      "parent": "/_home/$username"
+    },
+    "/_home/$username/": {
+      "filePath": "_home/$username/index.tsx",
+      "parent": "/_home/$username"
     }
   }
 }

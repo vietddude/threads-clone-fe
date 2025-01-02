@@ -10,9 +10,7 @@ import FollowButton from '@/components/buttons/follow-button'
 
 export default function SearchContainer() {
 	const navigate = useNavigate()
-	const path = useLocation({
-		select: (location) => location.pathname
-	})
+	const path = useLocation().pathname
 	const [searchValue, setSearchValue] = React.useState('')
 	const debouncedSearch = useDebounce(searchValue, 2000)
 

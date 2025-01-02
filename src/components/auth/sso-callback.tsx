@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Icons } from '@/components/icons'
 import { useAuth } from '@/hooks/use-auth'
-import { SSOCallbackSearch } from '@/routes/(auth)/_auth.sso-callback'
+import { SSOCallbackSearch } from '@/routes/_auth/_auth.sso-callback'
 
 export default function SSOCallback({ searchParams }: { searchParams: SSOCallbackSearch }) {
 	const { handleRedirectCallback } = useAuth()

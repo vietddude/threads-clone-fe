@@ -2,7 +2,7 @@ import OAuthLogin from '@/components/auth/oauth-login'
 import LoginForm from '@/components/forms/login-form'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/(auth)/_auth/login')({
+export const Route = createFileRoute('/_auth/login')({
 	component: Login
 })
 

@@ -14,7 +14,7 @@ const ssoCallbackSchema = z.object({
 
 export type SSOCallbackSearch = z.infer<typeof ssoCallbackSchema>
 
-export const Route = createFileRoute('/(auth)/_auth/sso-callback')({
+export const Route = createFileRoute('/_auth/sso-callback')({
 	component: SSOCallback,
 	pendingComponent: Loading,
 	validateSearch: ssoCallbackSchema,
@@ -50,12 +50,12 @@ function SSOCallback() {
 	const { accessToken, user } = Route.useLoaderData()
 
 	useEffect(() => {
-		if (user) {
+		if (user && accessToken) {
 			setUser(user)
 			setAccessToken(accessToken)
 			navigate({ to: '/setup' })
 		}
-	}, [user])
+	}, [user, accessToken])
 
 	return <div></div>
 }
