@@ -23,8 +23,10 @@ import { Route as AuthSsoCallbackImport } from './routes/_auth/sso-callback'
 import { Route as AuthSetupImport } from './routes/_auth/setup'
 import { Route as AuthLoginImport } from './routes/_auth/login'
 import { Route as HomeUsernameIndexImport } from './routes/_home/$username/index'
+import { Route as HomeUsernamePostImport } from './routes/_home/$username_/post'
 import { Route as HomeUsernameRepostsImport } from './routes/_home/$username/reposts'
 import { Route as HomeUsernameRepliesImport } from './routes/_home/$username/replies'
+import { Route as HomeUsernamePostPostIdImport } from './routes/_home/$username_/post/$postId'
 
 // Create/Update Routes
 
@@ -98,6 +100,12 @@ const HomeUsernameIndexRoute = HomeUsernameIndexImport.update({
   getParentRoute: () => HomeUsernameRoute,
 } as any)
 
+const HomeUsernamePostRoute = HomeUsernamePostImport.update({
+  id: '/$username_/post',
+  path: '/$username/post',
+  getParentRoute: () => HomeRoute,
+} as any)
+
 const HomeUsernameRepostsRoute = HomeUsernameRepostsImport.update({
   id: '/reposts',
   path: '/reposts',
@@ -108,6 +116,12 @@ const HomeUsernameRepliesRoute = HomeUsernameRepliesImport.update({
   id: '/replies',
   path: '/replies',
   getParentRoute: () => HomeUsernameRoute,
+} as any)
+
+const HomeUsernamePostPostIdRoute = HomeUsernamePostPostIdImport.update({
+  id: '/$postId',
+  path: '/$postId',
+  getParentRoute: () => HomeUsernamePostRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -205,12 +219,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeUsernameRepostsImport
       parentRoute: typeof HomeUsernameImport
     }
+    '/_home/$username_/post': {
+      id: '/_home/$username_/post'
+      path: '/$username/post'
+      fullPath: '/$username/post'
+      preLoaderRoute: typeof HomeUsernamePostImport
+      parentRoute: typeof HomeImport
+    }
     '/_home/$username/': {
       id: '/_home/$username/'
       path: '/'
       fullPath: '/$username/'
       preLoaderRoute: typeof HomeUsernameIndexImport
       parentRoute: typeof HomeUsernameImport
+    }
+    '/_home/$username_/post/$postId': {
+      id: '/_home/$username_/post/$postId'
+      path: '/$postId'
+      fullPath: '/$username/post/$postId'
+      preLoaderRoute: typeof HomeUsernamePostPostIdImport
+      parentRoute: typeof HomeUsernamePostImport
     }
   }
 }
@@ -247,11 +275,23 @@ const HomeUsernameRouteWithChildren = HomeUsernameRoute._addFileChildren(
   HomeUsernameRouteChildren,
 )
 
+interface HomeUsernamePostRouteChildren {
+  HomeUsernamePostPostIdRoute: typeof HomeUsernamePostPostIdRoute
+}
+
+const HomeUsernamePostRouteChildren: HomeUsernamePostRouteChildren = {
+  HomeUsernamePostPostIdRoute: HomeUsernamePostPostIdRoute,
+}
+
+const HomeUsernamePostRouteWithChildren =
+  HomeUsernamePostRoute._addFileChildren(HomeUsernamePostRouteChildren)
+
 interface HomeRouteChildren {
   HomeUsernameRoute: typeof HomeUsernameRouteWithChildren
   HomeActivityRoute: typeof HomeActivityRoute
   HomeSearchRoute: typeof HomeSearchRoute
   HomeIndexRoute: typeof HomeIndexRoute
+  HomeUsernamePostRoute: typeof HomeUsernamePostRouteWithChildren
 }
 
 const HomeRouteChildren: HomeRouteChildren = {
@@ -259,6 +299,7 @@ const HomeRouteChildren: HomeRouteChildren = {
   HomeActivityRoute: HomeActivityRoute,
   HomeSearchRoute: HomeSearchRoute,
   HomeIndexRoute: HomeIndexRoute,
+  HomeUsernamePostRoute: HomeUsernamePostRouteWithChildren,
 }
 
 const HomeRouteWithChildren = HomeRoute._addFileChildren(HomeRouteChildren)
@@ -276,7 +317,9 @@ export interface FileRoutesByFullPath {
   '/': typeof HomeIndexRoute
   '/$username/replies': typeof HomeUsernameRepliesRoute
   '/$username/reposts': typeof HomeUsernameRepostsRoute
+  '/$username/post': typeof HomeUsernamePostRouteWithChildren
   '/$username/': typeof HomeUsernameIndexRoute
+  '/$username/post/$postId': typeof HomeUsernamePostPostIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -291,7 +334,9 @@ export interface FileRoutesByTo {
   '/': typeof HomeIndexRoute
   '/$username/replies': typeof HomeUsernameRepliesRoute
   '/$username/reposts': typeof HomeUsernameRepostsRoute
+  '/$username/post': typeof HomeUsernamePostRouteWithChildren
   '/$username': typeof HomeUsernameIndexRoute
+  '/$username/post/$postId': typeof HomeUsernamePostPostIdRoute
 }
 
 export interface FileRoutesById {
@@ -309,7 +354,9 @@ export interface FileRoutesById {
   '/_home/': typeof HomeIndexRoute
   '/_home/$username/replies': typeof HomeUsernameRepliesRoute
   '/_home/$username/reposts': typeof HomeUsernameRepostsRoute
+  '/_home/$username_/post': typeof HomeUsernamePostRouteWithChildren
   '/_home/$username/': typeof HomeUsernameIndexRoute
+  '/_home/$username_/post/$postId': typeof HomeUsernamePostPostIdRoute
 }
 
 export interface FileRouteTypes {
@@ -327,7 +374,9 @@ export interface FileRouteTypes {
     | '/'
     | '/$username/replies'
     | '/$username/reposts'
+    | '/$username/post'
     | '/$username/'
+    | '/$username/post/$postId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | ''
@@ -341,7 +390,9 @@ export interface FileRouteTypes {
     | '/'
     | '/$username/replies'
     | '/$username/reposts'
+    | '/$username/post'
     | '/$username'
+    | '/$username/post/$postId'
   id:
     | '__root__'
     | '/_auth'
@@ -357,7 +408,9 @@ export interface FileRouteTypes {
     | '/_home/'
     | '/_home/$username/replies'
     | '/_home/$username/reposts'
+    | '/_home/$username_/post'
     | '/_home/$username/'
+    | '/_home/$username_/post/$postId'
   fileRoutesById: FileRoutesById
 }
 
@@ -405,7 +458,8 @@ export const routeTree = rootRoute
         "/_home/$username",
         "/_home/activity",
         "/_home/search",
-        "/_home/"
+        "/_home/",
+        "/_home/$username_/post"
       ]
     },
     "/error": {
@@ -455,9 +509,20 @@ export const routeTree = rootRoute
       "filePath": "_home/$username/reposts.tsx",
       "parent": "/_home/$username"
     },
+    "/_home/$username_/post": {
+      "filePath": "_home/$username_/post.tsx",
+      "parent": "/_home",
+      "children": [
+        "/_home/$username_/post/$postId"
+      ]
+    },
     "/_home/$username/": {
       "filePath": "_home/$username/index.tsx",
       "parent": "/_home/$username"
+    },
+    "/_home/$username_/post/$postId": {
+      "filePath": "_home/$username_/post/$postId.tsx",
+      "parent": "/_home/$username_/post"
     }
   }
 }

@@ -12,7 +12,7 @@ const CreateWithInput: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ ...pr
 			<div className='flex w-full my-4'>
 				<div className='w-full flex select-none'>
 					<Avatar className='rounded-full outline outline-1 outline-border h-9 w-9 mr-4'>
-						<AvatarImage src={user?.imageUrl} alt={user?.username ?? ''} className='object-cover' />
+						<AvatarImage src={user?.image ?? ''} alt={user?.username ?? ''} className='object-cover' />
 						<AvatarFallback>{user?.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
 					</Avatar>
 					<input

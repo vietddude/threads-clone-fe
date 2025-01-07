@@ -114,9 +114,9 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({ isOpen, replyThreadIn
 				{replyThreadInfo ? (
 					<>
 						<div className='flex-grow resize-none overflow-hidden outline-none text-[15px] text-accent-foreground break-words placeholder:text-[#777777] w-full tracking-normal whitespace-pre-line'>
-							<div
+							<span
 								dangerouslySetInnerHTML={{
-									__html: replyThreadInfo.text.slice(1, -1).replace(/\\n/g, '\n')
+									__html: replyThreadInfo.text.replace(/^"|"$/g, '').replace(/\\n/g, '\n')
 								}}
 							/>
 						</div>

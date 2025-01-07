@@ -12,6 +12,7 @@ import { Icons } from '@/components/icons'
 import { Check } from 'lucide-react'
 import { useMutation } from '@tanstack/react-query'
 import { post } from '@/api'
+import { queryClient } from '@/routes/__root'
 
 interface ConfirmationCardProps {
 	id: string
@@ -26,10 +27,9 @@ const ConfirmationCard: React.FC<ConfirmationCardProps> = ({ id }) => {
 			toast.error('DeleteError: Something went wrong!')
 		},
 		onSettled: async () => {
-			// if (path === '/') {
-			// 	await trpcUtils.post.getInfinitePost.invalidate()
-			// }
-			// await trpcUtils.invalidate()
+			if (path === '/') {
+				await queryClient.invalidateQueries({ queryKey: ['posts'] })
+			}
 		}
 	})
 

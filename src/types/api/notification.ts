@@ -1,8 +1,6 @@
 import { Notification } from '@/types'
+import { PaginationResponse } from './common'
 
-export type NotificationResponse = {
+export type NotificationResponse = PaginationResponse & {
 	data: Notification[]
-	page: number
-	limit: number
-	total: number
 }

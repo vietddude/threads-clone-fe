@@ -1,7 +1,6 @@
 import React from 'react'
 import { Follow } from '@/components/ui/follow-button'
 import { toast } from 'sonner'
-import type { AuthorInfoProps } from '@/types'
 import { cn } from '@/lib/utils'
 import useUser from '@/store/user'
 import { useLocation } from '@tanstack/react-router'
@@ -11,8 +10,11 @@ import { queryClient } from '@/routes/__root'
 
 interface FollowButtonProps extends React.HTMLAttributes<HTMLDivElement> {
 	variant: string
-	author: AuthorInfoProps
-	isFollowedByMe: boolean
+	author: {
+		id: string
+		username: string
+		isFollowing: boolean
+	}
 }
 
 const FollowButton: React.FC<FollowButtonProps> = ({ variant, author, className }) => {
@@ -47,9 +49,9 @@ const FollowButton: React.FC<FollowButtonProps> = ({ variant, author, className 
 		},
 		onSettled: async () => {
 			if (path === '/') {
-				console.log('invalidate')
+				await queryClient.invalidateQueries({ queryKey: ['posts'] })
 			}
-			await queryClient.invalidateQueries({ queryKey: ['profile'] })
+			await queryClient.invalidateQueries({ queryKey: ['profile', author.username] })
 		}
 	})
 

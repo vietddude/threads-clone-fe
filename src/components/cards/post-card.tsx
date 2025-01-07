@@ -3,7 +3,6 @@ import { Link } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
 import { cn, formatTimeAgo } from '@/lib/utils'
 import type { PostCardProps } from '@/types'
-import useUser from '@/store/user'
 import UserRepliesImages from '@/components/user/user-replies-images'
 import ProfileInfoCard from '@/components/cards/user-profile-card'
 import PostActionMenu from '@/components/menus/post-action-menu'
@@ -22,24 +21,20 @@ const PostCard: React.FC<PostCardProps> = ({
 	id,
 	text,
 	createdAt,
-	likes,
 	replies,
 	author,
 	count,
 	images,
-	reposts,
-	quoteId
+	quoteId,
+	liked,
+	reposted
 }) => {
-	const { user: loggedUser } = useUser()
-
 	const { replyCount } = count
 
-	const isRepostedByMe = reposts?.some((repost) => repost.userId === loggedUser?.id)
-
-	const getPostReplies = replies?.map((reply) => ({
-		id: reply.author.id,
-		username: reply.author.username,
-		image: reply.author.image
+	const getPostReplies = replies?.map((reply: { id: string; username: string; image: string }) => ({
+		id: reply.id,
+		username: reply.username,
+		image: reply.image
 	}))
 
 	const [likeCount, setLikeCount] = React.useState(count.likeCount)
@@ -75,7 +70,7 @@ const PostCard: React.FC<PostCardProps> = ({
 							</button>
 						</DialogTrigger>
 						<DialogContent className='max-w-[360px] w-full p-0 rounded-2xl  border-none'>
-							<ProfileInfoCard {...author} isFollowedByMe={false} />
+							<ProfileInfoCard {...author} />
 						</DialogContent>
 					</Dialog>
 
@@ -98,8 +93,10 @@ const PostCard: React.FC<PostCardProps> = ({
 							</div>
 
 							<Link href={`/@${author.username}/post/${id}`} className='w-full '>
-								<div
-									dangerouslySetInnerHTML={{ __html: text.slice(1, -1).replace(/\\n/g, '\n') }}
+								<span
+									dangerouslySetInnerHTML={{
+										__html: text.replace(/^"|"$/g, '').replace(/\\n/g, '\n')
+									}}
 									className='text-accent-foreground text-[15px] leading-5 mt-1 max-md:max-w-full whitespace-pre-line'
 								/>
 							</Link>
@@ -113,7 +110,7 @@ const PostCard: React.FC<PostCardProps> = ({
 									likeInfo={{
 										id,
 										count,
-										likes
+										liked
 									}}
 									onLike={handleLikeClick}
 								/>
@@ -130,7 +127,7 @@ const PostCard: React.FC<PostCardProps> = ({
 									text={text}
 									author={author}
 									createdAt={createdAt}
-									isRepostedByMe={isRepostedByMe}
+									reposted={reposted}
 								/>
 								<ShareButton id={id} author={author.username} />
 							</div>
@@ -163,7 +160,7 @@ const PostCard: React.FC<PostCardProps> = ({
 
 					{replyCount > 0 && likeCount > 0 && <span className='mx-2'> · </span>}
 
-					{/* {likeCount > 0 && <PostActivityCard author={author} id={id} likeCount={likeCount} text={text} />} */}
+					{likeCount > 0 && <PostActivityCard author={author} id={id} likeCount={likeCount} text={text} />}
 				</div>
 			</div>
 		</>

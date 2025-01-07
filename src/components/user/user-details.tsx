@@ -63,7 +63,7 @@ const UserProfile: React.FC<UserProfileInfoProps> = (props) => {
 
 						{link && (
 							<Link
-								href={link}
+								to={link}
 								className='text-[#777777] text-[15px] hover:underline cursor-pointer active:text-[#4d4d4d]'
 							>
 								{formatURL(link)}
@@ -78,12 +78,7 @@ const UserProfile: React.FC<UserProfileInfoProps> = (props) => {
 			</div>
 			{user?.id != id && (
 				<div className='grid gap-2 sm:grid-cols-2 pt-2'>
-					<FollowButton
-						className='text-[14px] px-6'
-						variant='default'
-						author={props}
-						isFollowedByMe={props.isFollowing}
-					/>
+					<FollowButton className='text-[14px] px-6' variant='default' author={props} />
 					<Button
 						size={'sm'}
 						variant='outline'

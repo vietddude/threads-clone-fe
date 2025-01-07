@@ -4,15 +4,19 @@ import { ChevronRight } from 'lucide-react'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
 import { useDebounce } from '@/hooks/use-debounce'
-import { Link, useLocation, useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import Username from '@/components/user/user-username'
 import FollowButton from '@/components/buttons/follow-button'
+import { user } from '@/api'
+import { infiniteQueryOptions, useInfiniteQuery } from '@tanstack/react-query'
+import InfiniteScroll from 'react-infinite-scroll-component'
+import { Route } from '@/routes/__root'
 
 export default function SearchContainer() {
-	const navigate = useNavigate()
-	const path = useLocation().pathname
+	const navigate = useNavigate({ from: Route.fullPath })
+	// const path = useLocation().pathname
 	const [searchValue, setSearchValue] = React.useState('')
-	const debouncedSearch = useDebounce(searchValue, 2000)
+	const debouncedSearch = useDebounce(searchValue, 200)
 
 	return (
 		<>
@@ -47,7 +51,6 @@ export default function SearchContainer() {
 							<div
 								onClick={() => {
 									navigate({
-										pathname: '/search',
 										search: { q: searchValue }
 									})
 									setSearchValue('')
@@ -55,7 +58,7 @@ export default function SearchContainer() {
 								className='flex justify-between items-center w-full py-5 mr-6 cursor-pointer'
 							>
 								<div className='text-base font-semibold tracking-normal '>
-									Search for <span>&quot;{searchValue}&quot;</span>
+									Search for post with <span>&quot;{searchValue}&quot;</span>
 								</div>
 								<ChevronRight className='h-5 w-5  ' />
 							</div>
@@ -72,21 +75,34 @@ interface DisplaySearchedResultsProps {
 	debouncedSearch: string
 }
 
+const usersQueryOptions = (query: string) =>
+	infiniteQueryOptions({
+		queryKey: ['user-query', query],
+		queryFn: ({ pageParam }) => user.infiniteUsers({ query, pageParam }),
+		initialPageParam: 1,
+		getNextPageParam: (lastPage) => {
+			const totalPages = Math.ceil(lastPage.totalItems / lastPage.pageSize)
+			return lastPage.currentPage < totalPages ? lastPage.currentPage + 1 : undefined
+		}
+	})
+
 const DisplaySearchedResults: React.FC<DisplaySearchedResultsProps> = ({ debouncedSearch }) => {
-	const { data, isLoading } = api.search.allUsers.useQuery({ debouncedSearch })
+	const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(usersQueryOptions(debouncedSearch))
 
-	if (isLoading) {
-		return (
-			<div className='h-[100px] w-full justify-center items-center flex '>
-				<Icons.loading className='h-11 w-11' />
-			</div>
-		)
-	}
+	const allUsers = data?.pages.flatMap((page) => page.data)
 
-	if (data?.length === 0) return
 	return (
-		<>
-			{data?.map((user, index) => (
+		<InfiniteScroll
+			dataLength={allUsers ? allUsers.length : 0}
+			next={fetchNextPage}
+			hasMore={hasNextPage ?? false}
+			loader={
+				<div className='h-[100px] w-full justify-center items-center flex  mb-[10vh] sm:mb-0'>
+					<Icons.loading className='h-11 w-11' />
+				</div>
+			}
+		>
+			{allUsers?.map((user, index) => (
 				<div key={index} className='flex items-center w-full '>
 					<button className='mx-5 '>
 						<div className='h-9 w-9 outline outline-1  outline-border rounded-full'>
@@ -113,6 +129,6 @@ const DisplaySearchedResults: React.FC<DisplaySearchedResultsProps> = ({ debounc
 					</div>
 				</div>
 			))}
-		</>
+		</InfiniteScroll>
 	)
 }

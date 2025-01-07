@@ -5,20 +5,9 @@ import type { UserCardProps } from '@/types'
 import Username from '@/components/user/user-username'
 import { Icons } from '@/components/icons'
 import FollowButton from '@/components/buttons/follow-button'
-import UserFollowers from '@/components/user/user-followers'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
-const UserActionCard: React.FC<UserCardProps> = ({
-	id,
-	bio,
-	fullname,
-	createdAt,
-	image,
-	link,
-	isAdmin,
-	username,
-	followers
-}) => {
+const UserActionCard: React.FC<UserCardProps> = ({ id, fullname, image, isAdmin, username, isFollowing }) => {
 	return (
 		<div className='flex flex-col w-full'>
 			<div className='flex w-full mt-5'>
@@ -35,15 +24,8 @@ const UserActionCard: React.FC<UserCardProps> = ({
 								<div className='flex'>
 									<Username
 										author={{
-											id,
-											image,
-											createdAt,
 											username,
-											fullname,
-											isAdmin,
-											link,
-											bio,
-											followers
+											isAdmin
 										}}
 									/>
 									{/* TODO: This is temp solution */}
@@ -59,22 +41,11 @@ const UserActionCard: React.FC<UserCardProps> = ({
 							variant='outline'
 							author={{
 								id,
-								image,
-								createdAt,
 								username,
-								fullname,
-								isAdmin,
-								link,
-								bio,
-								followers
+								isFollowing
 							}}
 						/>
 					</div>
-					<UserFollowers
-						followers={followers}
-						showImage={false}
-						className='text-black dark:text-white pl-0 mt-1 text-[16px]'
-					/>
 					<Separator className='mt-4' />
 				</div>
 			</div>

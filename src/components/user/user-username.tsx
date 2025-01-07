@@ -1,12 +1,14 @@
 import React from 'react'
 import { Link } from '@tanstack/react-router'
-import type { AuthorInfoProps } from '@/types'
 import { Icons } from '@/components/icons'
 import UserProfileCard from '@/components/cards/user-profile-card'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
 
 interface UserUsernameProps {
-	author: AuthorInfoProps
+	author: {
+		username: string
+		isAdmin: boolean | null
+	}
 }
 
 const UserUsername: React.FC<UserUsernameProps> = ({ author }) => {
@@ -26,7 +28,7 @@ const UserUsername: React.FC<UserUsernameProps> = ({ author }) => {
 				sideOffset={10}
 				className='w-[360px] p-0 z-[99999] rounded-2xl bg-transparent border-none'
 			>
-				<UserProfileCard {...author} />
+				<UserProfileCard username={author.username} />
 			</HoverCardContent>
 		</HoverCard>
 	)

@@ -1,10 +1,10 @@
 import { cn } from '@/lib/utils'
-import type { PostCardProps } from '@/types'
+import type { UserCardProps } from '@/types'
 import React from 'react'
 
 interface UserFollowersProps extends React.HTMLAttributes<HTMLDivElement> {
 	showImage: boolean
-	followers: PostCardProps['author']['followers']
+	followers: UserCardProps['followers']
 }
 
 const UserFollowers: React.FC<UserFollowersProps> = ({ followers, showImage, className }) => {

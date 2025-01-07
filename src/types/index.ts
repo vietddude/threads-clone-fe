@@ -2,18 +2,18 @@ import { InfinitePostResponse } from './api/post'
 import { NotificationType, Privacy } from './enums'
 
 export type User = {
-	link: string | null
 	id: string
+	username: string
+	fullname: string | null
+	verified: boolean | null
+	image: string | null
+	isAdmin: boolean | null
+	link: string | null
 	bio: string | null
 	privacy: Privacy
-	username: string
-	verified: boolean | null
 	createdAt: Date
 	updatedAt: Date
-	fullname: string | null
-	image: string | null
 	email: string
-	isAdmin: boolean | null
 }
 
 export type Profile = User & {
@@ -33,7 +33,7 @@ export type Notification = {
 	read: boolean
 	notificationType: string
 	post: string
-	senderUser: User
+	senderUser: Profile
 }
 
 export type Post = {
@@ -41,39 +41,65 @@ export type Post = {
 	createdAt: Date
 	text: string
 	parentPostId: string | null
-	author: Profile
+	author: {
+		id: string
+		image: string
+		username: string
+		fullname: string
+		isAdmin: boolean
+		isFollowing: boolean
+	}
 	count: {
 		likeCount: number
 		replyCount: number
 	}
-	likes: {
-		userId: string
-	}[]
+	liked: boolean
+	reposted: boolean
 	replies: {
-		author: {
-			id: string
-			image: string
-			username: string
-		}
+		id: string
+		image: string
+		username: string
 	}[]
 	quoteId: string | null
 	images: string[]
-	reposts: {
-		userId: string
-		postId: string
-	}[]
+}
+
+export type NestedPost = {
+	id: string
+	createdAt: Date
+	text: string
+	parentPostId: string | null
+	author: {
+		id: string
+		image: string
+		username: string
+		fullname: string
+		isAdmin: boolean
+		isFollowing: boolean
+	}
+	count: {
+		likeCount: number
+		replyCount: number
+	}
+	liked: boolean
+	reposted: boolean
+	replies: any[]
+	quoteId: string | null
+	images: string[]
 }
 
 type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType[number]
-// type RouterOutput = inferRouterOutputs<AppRouter>;
 
 export type PostCardProps = ArrayElement<InfinitePostResponse['data']>
 
 export type AuthorInfoProps = PostCardProps['author']
 
-export type PostReplyCardProps = RouterOutput['post']['getNestedPosts']
+export type PostReplyCardProps = {
+	postInfo: NestedPost
+	parentPosts: PostCardProps[]
+}
 
-export type UserCardProps = ArrayElement<RouterOutput['user']['allUsers']['allUsers']>
+export type UserCardProps = Profile
 
 export type UserProfileInfoProps = Profile
 

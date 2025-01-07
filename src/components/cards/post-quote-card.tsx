@@ -6,31 +6,19 @@ import { Icons } from '@/components/icons'
 import type { ParentPostInfo } from '@/types'
 import { Link } from '@tanstack/react-router'
 import { formatTimeAgo } from '@/lib/utils'
+import { post } from '@/api'
+import { useQuery } from '@tanstack/react-query'
 
 type PostQuoteCardProps = Partial<Pick<ParentPostInfo, 'id' | 'text' | 'author'>> & { createdAt?: Date }
 
 const PostQuoteCard: React.FC<PostQuoteCardProps & { quoteId?: string }> = ({ author, text, quoteId, createdAt }) => {
 	if (quoteId) {
-		// const { data, isLoading } = api.post.getQuotedPost.useQuery(
-		// 	{ id: quoteId },
-		// 	{
-		// 		enabled: !!quoteId,
-		// 		staleTime: Infinity
-		// 	}
-		// )
-		const data = {
-			postInfo: {
-				user: {
-					username: 'test',
-					fullname: 'test',
-					image: 'test'
-				},
-				id: 'test',
-				text: 'test',
-				createdAt: new Date()
-			}
-		}
-		const isLoading = false
+		const { data, isLoading } = useQuery({
+			queryKey: ['post', quoteId],
+			queryFn: () => post.getPost(quoteId),
+			enabled: !!quoteId,
+			staleTime: Infinity
+		})
 
 		if (isLoading) {
 			return (
@@ -43,12 +31,8 @@ const PostQuoteCard: React.FC<PostQuoteCardProps & { quoteId?: string }> = ({ au
 		if (!data) return <>Not found.</>
 
 		return (
-			<Link href={`/@${data.postInfo.user.username}/post/${data.postInfo.id}`} className='w-full'>
-				<RenderCard
-					author={data?.postInfo.user}
-					text={data?.postInfo.text}
-					createdAt={data.postInfo.createdAt}
-				/>
+			<Link href={`/@${data.author.username}/post/${data.id}`} className='w-full'>
+				<RenderCard author={data.author} text={data.text} createdAt={data.createdAt} />
 			</Link>
 		)
 	}
@@ -76,9 +60,9 @@ const RenderCard: React.FC<PostQuoteCardProps> = ({ author, text, createdAt }) =
 			</div>
 			{text && (
 				<span className='flex-grow resize-none overflow-hidden outline-none text-[15px] text-accent-foreground break-words placeholder:text-[#777777] w-full tracking-normal whitespace-pre-line truncate'>
-					<div
+					<span
 						dangerouslySetInnerHTML={{
-							__html: text.slice(1, -1).replace(/\\n/g, '\n')
+							__html: text.replace(/^"|"$/g, '').replace(/\\n/g, '\n')
 						}}
 					/>
 				</span>

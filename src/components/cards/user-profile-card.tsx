@@ -2,17 +2,26 @@ import React from 'react'
 import { Link } from '@tanstack/react-router'
 import { formatURL } from '@/lib/utils'
 import { Icons } from '@/components/icons'
-import type { PostCardProps } from '@/types'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import FollowButton from '@/components/buttons/follow-button'
 import UserFollowers from '@/components/user/user-followers'
+import { useQuery } from '@tanstack/react-query'
+import { user } from '@/api'
 
-type UserProfileCardProps = PostCardProps['author'] & {
-	isFollowedByMe: boolean
+type UserProfileCardProps = {
+	username: string
 }
 
 const UserProfileCard: React.FC<UserProfileCardProps> = (props) => {
-	const { bio, image, username, followers, fullname, link, isAdmin, isFollowedByMe } = props
+	const { username } = props
+
+	const { data: profile } = useQuery({
+		queryKey: ['profile', username],
+		queryFn: () => user.getProfile(username)
+	})
+
+	if (!profile) return null
+	const { bio, image, fullname, link, isAdmin, followers } = profile
 
 	return (
 		<div className='z-[10] flex  flex-col space-y-4 h-fit  rounded-2xl p-6 bg-background shadow-xl dark:bg-[#181818]'>
@@ -44,7 +53,7 @@ const UserProfileCard: React.FC<UserProfileCardProps> = (props) => {
 			{bio && (
 				<span
 					dangerouslySetInnerHTML={{
-						__html: bio.slice(1, -1).replace(/\\n/g, '\n')
+						__html: bio.replace(/^"|"$/g, '').replace(/\\n/g, '\n')
 					}}
 					className='text-[15px] max-h-[100px] whitespace-pre-line text-overflow-ellipsis'
 				/>
@@ -63,7 +72,7 @@ const UserProfileCard: React.FC<UserProfileCardProps> = (props) => {
 					</Link>
 				)}
 			</div>
-			<FollowButton variant='default' author={props} isFollowedByMe={isFollowedByMe} />
+			<FollowButton variant='default' author={profile} />
 		</div>
 	)
 }

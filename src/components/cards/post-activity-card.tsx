@@ -4,11 +4,13 @@ import { Icons } from '@/components/icons'
 import { ChevronRight } from 'lucide-react'
 import type { AuthorInfoProps } from '@/types'
 import Username from '@/components/user/user-username'
-import Link from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { cn } from '@/lib/utils'
 import FollowButton from '@/components/buttons/follow-button'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { post } from '@/api'
+import { useQuery } from '@tanstack/react-query'
 
 interface PostActivityCardProps {
 	likeCount: number
@@ -40,9 +42,9 @@ const PostActivityCard: React.FC<PostActivityCardProps> = ({ likeCount, id, text
 							<Username author={author} />
 						</div>
 						<div className='flex-grow resize-none overflow-hidden outline-none text-[15px] text-accent-foreground break-words placeholder:text-[#777777] w-full tracking-normal whitespace-pre-line truncate'>
-							<div
+							<span
 								dangerouslySetInnerHTML={{
-									__html: text.slice(1, -1).replace(/\\n/g, '\n')
+									__html: text.replace(/^"|"$/g, '').replace(/\\n/g, '\n')
 								}}
 							/>
 						</div>
@@ -61,7 +63,10 @@ interface DisplayInsightProps {
 }
 
 const DisplayInsight: React.FC<DisplayInsightProps> = ({ id }) => {
-	const { data, isLoading } = api.like.postLikeInfo.useQuery({ id })
+	const { data, isLoading } = useQuery({
+		queryKey: ['post-like-info', id],
+		queryFn: () => post.postLikeInfo(id)
+	})
 
 	if (isLoading) {
 		return (
@@ -71,8 +76,8 @@ const DisplayInsight: React.FC<DisplayInsightProps> = ({ id }) => {
 		)
 	}
 
-	const likeCount = data?.likes.length
-	const repostCount = data?.reposts.length
+	const likeCount = data?.likeCount
+	const repostCount = data?.repostCount
 
 	return (
 		<>
@@ -118,8 +123,8 @@ const DisplayInsight: React.FC<DisplayInsightProps> = ({ id }) => {
 					<button className='relative ml-4 mr-3'>
 						<div className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full'>
 							<Avatar className='rounded-full w-full h-full'>
-								<AvatarImage src={userData.user.image ?? ''} alt={userData.user.fullname ?? ''} />
-								<AvatarFallback>{userData.user.username.slice(0, 2).toUpperCase()}</AvatarFallback>
+								<AvatarImage src={userData.image ?? ''} alt={userData.fullname ?? ''} />
+								<AvatarFallback>{userData.username.slice(0, 2).toUpperCase()}</AvatarFallback>
 							</Avatar>
 						</div>
 						<div className='bg-red-500 absolute -bottom-0.5 -right-0.5  rounded-2xl border-2 border-background text-background hover:scale-105 active:scale-95'>
@@ -131,21 +136,21 @@ const DisplayInsight: React.FC<DisplayInsightProps> = ({ id }) => {
 							'border-b border-border': index !== data.likes.length - 1
 						})}
 					>
-						<Link href={`/@${userData.user.username}`} className='flex flex-col gap-1.5 w-full'>
+						<Link href={`/@${userData.username}`} className='flex flex-col gap-1.5 w-full'>
 							<div className='flex flex-col w-full'>
 								<div className='flex'>
-									<Username author={userData.user} />
+									<Username author={userData} />
 									{/* TODO: This is temp solution */}
 									<div className='w-3 h-3 invisible'>
 										<Icons.verified className='w-3 h-3' />
 									</div>
 								</div>
 								<span className='text-[15px]  text-[#6A6A6A] tracking-wide mt-1'>
-									{userData.user.fullname}
+									{userData.fullname}
 								</span>
 							</div>
 						</Link>
-						<FollowButton variant='outline' author={userData.user} className='text-[14px] px-6' />
+						<FollowButton variant='outline' author={userData} className='text-[14px] px-6' />
 					</div>
 				</div>
 			))}

@@ -1,4 +1,4 @@
-import { ApiError } from '@/types/api/error'
+import { ApiError } from '@/types/api/common'
 import axios from 'axios'
 import { API_URL } from '@/lib/config'
 import useToken from '@/store/token'
@@ -31,7 +31,7 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
 	(response) => {
 		// Trả về dữ liệu nếu response thành công
-		return response.data?.data || response.data // Lấy data từ response
+		return response.data
 	},
 	(error) => {
 		const apiError = error.response?.data as ApiError

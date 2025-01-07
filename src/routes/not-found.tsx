@@ -5,7 +5,7 @@ export const Route = createFileRoute('/not-found')({
 	component: NotFound
 })
 
-function NotFound() {
+export function NotFound() {
 	return (
 		<>
 			<div className='flex flex-col justify-between h-[80vh] '>

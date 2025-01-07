@@ -1,12 +1,9 @@
-import { Post } from '@/types'
-import { PostPrivacy } from '../enums'
+import { NestedPost, Post, User } from '@/types'
+import { PostPrivacy } from '@/types/enums'
+import { PaginationResponse } from './common'
 
-export type InfinitePostResponse = {
+export type InfinitePostResponse = PaginationResponse & {
 	data: Post[]
-	page: number
-	limit: number
-	total: number
-	hasMore: boolean
 }
 
 export type CreatePostRequest = {
@@ -18,8 +15,11 @@ export type CreatePostRequest = {
 }
 
 export type CreatePostResponse = {
-	post: Post
+	postId: string
+	author: User
 }
+
+export type PostResponse = Post
 
 export type ReplyToPostRequest = {
 	postAuthor: string
@@ -30,5 +30,34 @@ export type ReplyToPostRequest = {
 }
 
 export type ReplyToPostResponse = {
-	post: Post
+	postId: string
+	author: User
+}
+
+export type LikeResponse = {
+	postId: string
+	liked: boolean
+}
+
+export type RepostResponse = {
+	postId: string
+	reposted: boolean
+}
+
+export type PostLikeInfoResponse = {
+	likeCount: number
+	repostCount: number
+	likes: {
+		id: string
+		username: string
+		fullname: string
+		image: string
+		isAdmin: boolean
+		isFollowing: boolean
+	}[]
+}
+
+export type NestedPostResponse = {
+	postInfo: NestedPost
+	parentPosts: Post[]
 }

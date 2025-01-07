@@ -20,7 +20,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { useMutation } from '@tanstack/react-query'
 import { auth } from '@/api'
 import { SetupRequest } from '@/types/api/auth'
-import { ApiError } from '@/types/api/error'
+import { ApiError } from '@/types/api/common'
 
 type UserSetupProps = Pick<User, 'bio' | 'link' | 'privacy' | 'username'>
 
