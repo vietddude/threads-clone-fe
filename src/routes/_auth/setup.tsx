@@ -17,7 +17,7 @@ function AccountSetup() {
 				to: '/'
 			})
 		}
-	}, [user])
+	}, [user, navigate])
 
 	return (
 		<div className='mx-auto flex h-[95vh] w-full max-w-lg flex-col items-center justify-center gap-6'>

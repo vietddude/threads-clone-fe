@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Icons } from '@/components/icons'
 import { authenticateWithRedirect } from '@/lib/oauth'
 
-const OAuthLogin: React.FC = ({}) => {
+const OAuthLogin: React.FC = () => {
 	const [isLoading, setIsLoading] = React.useState<boolean | null>(null)
 
 	async function oauthSignIn() {
@@ -12,6 +12,7 @@ const OAuthLogin: React.FC = ({}) => {
 			setIsLoading(true)
 			authenticateWithRedirect()
 		} catch (error) {
+			console.error(error)
 			setIsLoading(false)
 		}
 	}

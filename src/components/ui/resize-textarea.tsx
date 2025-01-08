@@ -2,10 +2,7 @@ import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
-/* eslint-disable @typescript-eslint/no-empty-interface */
-export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
-
-const ResizeTextarea: React.FC<TextareaProps> = ({ className, ...props }) => {
+const ResizeTextarea: React.FC<React.TextareaHTMLAttributes<HTMLTextAreaElement>> = ({ className, ...props }) => {
 	function updateTextAreaSize(textArea?: HTMLTextAreaElement) {
 		if (textArea == null) return
 		textArea.style.height = '0'

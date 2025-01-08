@@ -14,7 +14,6 @@ import { Route } from '@/routes/__root'
 
 export default function SearchContainer() {
 	const navigate = useNavigate({ from: Route.fullPath })
-	// const path = useLocation().pathname
 	const [searchValue, setSearchValue] = React.useState('')
 	const debouncedSearch = useDebounce(searchValue, 200)
 

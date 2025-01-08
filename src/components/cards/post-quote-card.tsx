@@ -13,6 +13,7 @@ type PostQuoteCardProps = Partial<Pick<ParentPostInfo, 'id' | 'text' | 'author'>
 
 const PostQuoteCard: React.FC<PostQuoteCardProps & { quoteId?: string }> = ({ author, text, quoteId, createdAt }) => {
 	if (quoteId) {
+		// eslint-disable-next-line react-hooks/rules-of-hooks
 		const { data, isLoading } = useQuery({
 			queryKey: ['post', quoteId],
 			queryFn: () => post.getPost(quoteId),

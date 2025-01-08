@@ -2,7 +2,7 @@ import { useImageStore } from '@/store/image'
 import { X } from 'lucide-react'
 import React from 'react'
 
-const FullscreenImageView: React.FC = ({}) => {
+const FullscreenImageView: React.FC = () => {
 	const { imageUrl, setImageUrl } = useImageStore()
 
 	return (

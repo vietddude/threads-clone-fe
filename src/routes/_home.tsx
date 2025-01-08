@@ -17,7 +17,7 @@ function RouteComponent() {
 				to: '/login'
 			})
 		}
-	}, [user])
+	}, [user, navigate])
 	return (
 		<>
 			<SiteHeader />

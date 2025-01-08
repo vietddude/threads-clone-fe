@@ -55,7 +55,7 @@ function SSOCallback() {
 			setAccessToken(accessToken)
 			navigate({ to: '/setup' })
 		}
-	}, [user, accessToken])
+	}, [user, accessToken, navigate, setAccessToken, setUser])
 
 	return <div></div>
 }

@@ -49,8 +49,6 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({ isOpen, replyThreadIn
 			setPreviewURL(previewURL)
 
 			setSelectedFile(acceptedFiles)
-
-			// eslint-disable-next-line react-hooks/exhaustive-deps
 		},
 		[maxSize]
 	)

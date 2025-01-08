@@ -29,12 +29,8 @@ const uploadToCloudinary = async (file: File): Promise<string> => {
 }
 
 export const uploadImage = async (file: File): Promise<string> => {
-	try {
-		const imageUrl = await uploadToCloudinary(file)
-		return imageUrl
-	} catch (error) {
-		throw error // Propagate error for further handling
-	}
+	const imageUrl = await uploadToCloudinary(file)
+	return imageUrl
 }
 
 export const uploadMultipleImages = async (files: File[]): Promise<string[]> => {

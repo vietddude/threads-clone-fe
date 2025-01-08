@@ -8,11 +8,22 @@ import {
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { useNavigate } from '@tanstack/react-router'
+import useUser from '@/store/user'
+import useToken from '@/store/token'
+import Cookie from 'js-cookie'
 
 export default function NavigationMenu() {
 	const navigate = useNavigate()
 	const { theme, setTheme } = useTheme()
-	// const { signOut } = useAuth()
+	const { clearUser } = useUser()
+	const { setAccessToken } = useToken()
+
+	const handleLogout = () => {
+		clearUser()
+		setAccessToken('')
+		Cookie.remove('refreshToken')
+		navigate({ to: '/' })
+	}
 
 	return (
 		<>
@@ -42,7 +53,7 @@ export default function NavigationMenu() {
 					</DropdownMenuItem>
 					<DropdownMenuSeparator className='h-[1.2px] my-0' />
 					<DropdownMenuItem className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px]  active:bg-primary-foreground rounded-none'>
-						<div aria-label='Log out' onClick={() => navigate({ to: '/' })}>
+						<div aria-label='Log out' onClick={() => handleLogout()}>
 							Log out
 						</div>
 					</DropdownMenuItem>

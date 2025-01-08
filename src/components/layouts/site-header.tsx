@@ -12,7 +12,11 @@ export default function SiteHeader() {
 
 	React.useEffect(() => {
 		const changeBgColor = () => {
-			window.scrollY > 0 ? setIsScrolled(true) : setIsScrolled(false)
+			if (window.scrollY > 0) {
+				setIsScrolled(true)
+			} else {
+				setIsScrolled(false)
+			}
 		}
 		window.addEventListener('scroll', changeBgColor)
 		return () => window.removeEventListener('scroll', changeBgColor)

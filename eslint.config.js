@@ -30,15 +30,15 @@ export default tseslint.config(
       'prettier/prettier': [
         'warn',
         {
-          arrowParens: 'always',
+          arrowParents: "always",
           semi: false,
-          trailingComma: 'none',
-          tabWidth: 2,
-          endOfLine: 'auto',
-          useTabs: false,
+          trailingComma: "none",
+          tabWidth: 4,
+          endOfLine: "auto",
+          useTabs: true,
           singleQuote: true,
           printWidth: 120,
-          jsxSingleQuote: true,
+          jsxSingleQuote: true
         },
       ],
     },

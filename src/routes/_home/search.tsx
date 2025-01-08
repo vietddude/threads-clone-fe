@@ -96,7 +96,7 @@ const DisplayQueryPosts: React.FC<DisplayQueryPostsProps> = ({ searchQuery }) =>
 	if (searchQuery === null) {
 		return <></>
 	}
-
+	// eslint-disable-next-line react-hooks/rules-of-hooks
 	const { data, hasNextPage, fetchNextPage, isLoading, isError } = useInfiniteQuery(postsQueryOptions(searchQuery))
 
 	const allPosts = data?.pages.flatMap((page) => page.data)

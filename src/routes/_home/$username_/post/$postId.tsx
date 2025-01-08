@@ -29,7 +29,9 @@ function NestedPostComponent() {
 		queryFn: () => post.nestedPosts(postId)
 	})
 
-	isLoading && <Loading />
+	if (isLoading) {
+		return <Loading />
+	}
 
 	return (
 		<>

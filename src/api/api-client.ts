@@ -3,34 +3,33 @@ import axios from 'axios'
 import { API_URL } from '@/lib/config'
 import useToken from '@/store/token'
 
-// Tạo instance của axios
+// Create an axios instance
 export const apiClient = axios.create({
 	baseURL: API_URL,
-	withCredentials: true // Đảm bảo cookie được gửi đi kèm với request
+	withCredentials: true // Send cookies when calling API
 })
 
-// Interceptor để thêm token vào headers từ cookie
+// Interceptor handling request before sending
 apiClient.interceptors.request.use(
 	(config) => {
-		// Lấy token từ cookie
+		// Get access token from store
 		const accessToken = useToken.getState().accessToken
-		console.log('accessToken', accessToken)
 		if (accessToken) {
-			// Nếu token tồn tại thì thêm vào header Authorization
+			// Add Authorization header to the request
 			config.headers.Authorization = `Bearer ${accessToken}`
 		}
 		return config
 	},
 	(error) => {
-		// Xử lý lỗi khi gọi API trước khi request được gửi đi
+		// Return error if request fails
 		return Promise.reject(error)
 	}
 )
 
-// Interceptor để xử lý phản hồi API và lấy data
+// Interceptor handling response before returning
 apiClient.interceptors.response.use(
 	(response) => {
-		// Trả về dữ liệu nếu response thành công
+		// Return data if response is successful
 		return response.data
 	},
 	(error) => {

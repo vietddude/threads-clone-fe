@@ -2,7 +2,7 @@ import { apiClient } from './api-client'
 import { LoginRequest, LoginResponse, SetupRequest, SetupResponse, SSOCallbackResponse } from '@/types/api/auth'
 import { SSOCallbackSearch } from '@/routes/_auth/sso-callback'
 import { Profile } from '@/types'
-import { FollowResponse, InfiniteUserResponse } from '@/types/api/user'
+import { InfiniteUserResponse } from '@/types/api/user'
 import { NotificationResponse } from '@/types/api/notification'
 import {
 	CreatePostRequest,

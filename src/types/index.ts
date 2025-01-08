@@ -83,7 +83,7 @@ export type NestedPost = {
 	}
 	liked: boolean
 	reposted: boolean
-	replies: any[]
+	replies: Post[]
 	quoteId: string | null
 	images: string[]
 }

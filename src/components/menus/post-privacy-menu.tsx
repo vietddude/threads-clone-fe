@@ -9,7 +9,7 @@ import {
 import usePost from '@/store/post'
 import { PostPrivacy } from '@/types/enums'
 
-const PostPrivacyMenu: React.FC = ({}) => {
+const PostPrivacyMenu: React.FC = () => {
 	const { postPrivacy, setPostPrivacy } = usePost() as {
 		postPrivacy: PostPrivacy
 		setPostPrivacy: (postPrivacy: PostPrivacy) => void
